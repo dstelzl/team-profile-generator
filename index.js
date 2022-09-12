@@ -32,6 +32,58 @@ const managerQuestions = [
 
 },
 ]
+const engineerQuestions = [
+    {
+    type: 'input',
+    name: 'name',
+    message: "Please input your full name"
+
+},
+{
+    type: 'input',
+    name: 'ID',
+    message: "Please input your ID"
+
+},
+{
+    type: 'input',
+    name: 'email',
+    message: "Please input your email"
+
+},
+{
+    type: 'input',
+    name: 'github',
+    message: "Please input your GitHub username"
+
+},
+]
+const internQuestions = [
+    {
+    type: 'input',
+    name: 'name',
+    message: "Please input your full name"
+
+},
+{
+    type: 'input',
+    name: 'ID',
+    message: "Please input your ID"
+
+},
+{
+    type: 'input',
+    name: 'email',
+    message: "Please input your email"
+
+},
+{
+    type: 'input',
+    name: 'school',
+    message: "Please input the name of your School or Institution"
+
+},
+]
 const menuQuestion = {
     type: 'list',
     name: 'menuOption',
@@ -42,6 +94,22 @@ const menuQuestion = {
 function promptManager(){
     inquirer.prompt(managerQuestions).then(({name, id, email, office})=>{
         const employee = new Manager(name, id, email, office)
+        team.push(employee)
+        promptMenu()
+    
+    })
+}
+function promptEngineer(){
+    inquirer.prompt(engineerQuestions).then(({name, id, email, github})=>{
+        const employee = new Engineer(name, id, email, github)
+        team.push(employee)
+        promptMenu()
+    
+    })
+}
+function promptIntern(){
+    inquirer.prompt(managerQuestions).then(({name, id, email, office})=>{
+        const employee = new Intern(name, id, email, school)
         team.push(employee)
         promptMenu()
     
@@ -63,4 +131,23 @@ function promptMenu(){
         }
     })
 }
+//Create a function to write README file (use function for linked js file- generateMarkdown)
+function writeToFile(fileName, data) {
+    fs.writeFile(fileName, generateTeam(data), err => {
+        console.log(err);
+    } )
+}
+
+//Create a function to initialize app. (use "prompt" to display questions and redirect answers to a new README file generated using "writeToFile")
+function init() {
+    prompt(questions).then (answers => {
+        writeToFile('./dist/team.html', answers);
+    }) 
+}
+
+// Function call to initialize app
+init();
+
 promptManager()
+promptEngineer()
+promptIntern()
