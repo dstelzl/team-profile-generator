@@ -2,8 +2,8 @@ const Manager = require('./lib/Manager');
 const Engineer = require('./lib/Engineer');
 const Intern = require('./lib/Intern');
 const inquirer = require('inquirer');
-const { listenerCount } = require('process');
-const { choices } = require('yargs');
+const generateTeam = require('./src/page-template')
+const fs = require('fs')
 const team = []
 
 const managerQuestions = [
@@ -15,7 +15,7 @@ const managerQuestions = [
 },
 {
     type: 'input',
-    name: 'ID',
+    name: 'id',
     message: "Please input your ID"
 
 },
@@ -27,11 +27,18 @@ const managerQuestions = [
 },
 {
     type: 'input',
-    name: 'officeNumber',
+    name: 'office',
     message: "Please input your office number"
 
 },
 ]
+const menuQuestion = {
+    type: 'list',
+    name: 'menuOption',
+    message: 'What would you like to do next?',
+    choices: ['Add an Engineer', 'Add and Intern', 'Finish']
+
+}
 const engineerQuestions = [
     {
     type: 'input',
@@ -41,7 +48,7 @@ const engineerQuestions = [
 },
 {
     type: 'input',
-    name: 'ID',
+    name: 'id',
     message: "Please input your ID"
 
 },
@@ -67,7 +74,7 @@ const internQuestions = [
 },
 {
     type: 'input',
-    name: 'ID',
+    name: 'id',
     message: "Please input your ID"
 
 },
@@ -84,13 +91,7 @@ const internQuestions = [
 
 },
 ]
-const menuQuestion = {
-    type: 'list',
-    name: 'menuOption',
-    message: 'What would you like to do next?',
-    choices: ['Add an Engineer', 'Add and Intern', 'Finish']
 
-}
 function promptManager(){
     inquirer.prompt(managerQuestions).then(({name, id, email, office})=>{
         const employee = new Manager(name, id, email, office)
@@ -108,7 +109,7 @@ function promptEngineer(){
     })
 }
 function promptIntern(){
-    inquirer.prompt(managerQuestions).then(({name, id, email, office})=>{
+    inquirer.prompt(internQuestions).then(({name, id, email, school})=>{
         const employee = new Intern(name, id, email, school)
         team.push(employee)
         promptMenu()
@@ -119,35 +120,26 @@ function promptMenu(){
     inquirer.prompt(menuQuestion).then(({menuOption})=> {
         switch (menuOption) {
             case 'Add an Engineer' : 
-                promtEngineer()
+                promptEngineer()
                 break;
             case 'Add and Intern' : 
                 promptIntern()
                 break;
             case  'Finish' : 
-                buildHtml()
+            writeToFile()
                 break;
     
         }
     })
 }
-//Create a function to write README file (use function for linked js file- generateMarkdown)
-function writeToFile(fileName, data) {
-    fs.writeFile(fileName, generateTeam(data), err => {
+function writeToFile( ) {
+    fs.writeFile("./dist/team.html", generateTeam(team), err => {
         console.log(err);
     } )
 }
 
-//Create a function to initialize app. (use "prompt" to display questions and redirect answers to a new README file generated using "writeToFile")
-function init() {
-    prompt(questions).then (answers => {
-        writeToFile('./dist/team.html', answers);
-    }) 
-}
 
 // Function call to initialize app
-init();
+//init();
 
 promptManager()
-promptEngineer()
-promptIntern()
