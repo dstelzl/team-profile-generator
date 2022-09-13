@@ -14,6 +14,7 @@ User starts by typing in the node index.js command into the terminal and then an
 
 ## Visuals
 
+![screenshot of generated html](./assets/TeamProfileGenScreenshot.jpg )
 
 ## Testing
 
